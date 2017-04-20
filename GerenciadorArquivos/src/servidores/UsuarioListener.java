@@ -90,6 +90,7 @@ public class UsuarioListener extends Thread implements Serializable {
             case "PUT":
                 if (msg.length < 3) {
                     this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                    break;
                 }
                 result = salvarArquivo(msg);
                 this.usuario.getConexao().enviar(result.getDescStatus());

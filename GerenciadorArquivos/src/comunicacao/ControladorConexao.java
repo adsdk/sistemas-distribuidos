@@ -10,8 +10,7 @@ import java.util.Objects;
 /**
  * @param <T>
  * @class ConnectionController
- * @author Alencar Rodrigo Hentges <alencarhentges@gmail.com>
- * @date 31/03/2017
+ * @author adrisson.silva
  */
 public class ControladorConexao<T extends Serializable> {
 

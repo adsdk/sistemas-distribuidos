@@ -209,7 +209,7 @@ public class ServidorPrincipal implements Serializable {
                 return;
             case "1":
                 if (SERVIDORES_GERENCIADORES.isEmpty()) {
-                    System.out.println("Nenhum servidor secundário está ativo. Inicie um para poder continuar...");
+                    System.out.println("Nenhum servidor de gerenciamento está ativo. Inicie um para poder continuar...");
                 } else {
                     ServidorGerenciamento.addGerenciadorArquivos(criarNovoGerenciadorDeArquivos());
                 }

@@ -138,7 +138,7 @@ public class ServidorGerenciamento extends Thread {
     public static Arquivo buscarArquivo(String nomeArquivo) {
         Arquivo arquivo = null;
         for (ServidorArquivos servidorArquivos : SERVIDORES_ARQUIVO) {
-            servidorArquivos.buscarArquivo(nomeArquivo);
+            arquivo = servidorArquivos.buscarArquivo(nomeArquivo);
             if (arquivo != null) {
                 return arquivo;
             }
@@ -152,6 +152,7 @@ public class ServidorGerenciamento extends Thread {
             if (existeServidorDeArquivosAtivo()) {
                 SERVIDORES_ARQUIVO.get(0).adicionarArquivo(new Arquivo(nome, TipoArquivo.DOCUMENTO, conteudo));
                 Collections.sort(SERVIDORES_ARQUIVO);
+                return Status.REQUISICAO_OK;
             } else {
                 return Status.SERVIDOR_INDISPONIVEL;
             }
