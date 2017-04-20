@@ -1,7 +1,6 @@
 package cliente;
 
 import comunicacao.ControladorConexao;
-import comunicacao.mensagens.Mensagem;
 import comunicacao.mensagens.MensagemListaGerenciadores;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import servidores.info.GerenciadorInfo;
  */
 public class Cliente {
 
-    private static ControladorConexao<Mensagem> controladorConexao;
+    private static ControladorConexao<String> controladorConexao;
     private static final BufferedReader KEYBOARD_INPUT = new BufferedReader(new InputStreamReader(System.in));
     private static final String SERVIDOR_PRINCIPAL = "127.0.0.1";
 
@@ -41,7 +40,7 @@ public class Cliente {
 
             System.out.print("\nInforme o nome do servidor de gerenciamento que você deseja conectar-se: ");
             String nome = KEYBOARD_INPUT.readLine();
-            
+
             for (GerenciadorInfo gerenciadorInfo : msgLista.getGerenciadoresInfo()) {
                 if (gerenciadorInfo.getNome().equalsIgnoreCase(nome)) {
                     estabelecerConexaoComServidor(gerenciadorInfo.getIP(), gerenciadorInfo.getPort());
@@ -56,7 +55,7 @@ public class Cliente {
     private static MensagemListaGerenciadores buscarServidorDeGerenciamentoAtivos() throws ClassNotFoundException {
         try {
             controladorConexao = new ControladorConexao<>(SERVIDOR_PRINCIPAL, 6789);
-            Mensagem msg = controladorConexao.receber();
+            Object msg = controladorConexao.receber();
             controladorConexao.close();
             MensagemListaGerenciadores msgLista = (MensagemListaGerenciadores) msg;
             return msgLista;
@@ -80,10 +79,20 @@ public class Cliente {
         System.out.println("Estabelecendo conexão com o servidor...");
         controladorConexao = new ControladorConexao(ip, port);
         System.out.println("Conexão estabelecida com sucesso!");
-        
+
         while (controladorConexao.isConectionOpen()) {
-            Mensagem msg = controladorConexao.receber();
-            System.out.println(msg.getAcao());
+            String msg = controladorConexao.receber();
+            tratarMensagem(msg);
+        }
+    }
+
+    private static void tratarMensagem(String msg) throws IOException {
+        switch (msg) {
+            case "OBTER_REQUISICAO":
+                System.out.print("\nInforme a sua requisição: ");
+                String requisicao = KEYBOARD_INPUT.readLine();
+                controladorConexao.enviar(requisicao);
+                break;
         }
     }
 }

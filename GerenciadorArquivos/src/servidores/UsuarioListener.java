@@ -1,7 +1,5 @@
 package servidores;
 
-import comunicacao.enums.Acao;
-import comunicacao.mensagens.Mensagem;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
@@ -31,7 +29,7 @@ public class UsuarioListener extends Thread implements Serializable {
         try {
             enviarInformacoesDeUsuario();
             while (this.usuario.getConexao().isConectionOpen()) {
-                Mensagem msg = this.usuario.getConexao().receber();
+                String msg = this.usuario.getConexao().receber();
                 UtilGeral.printarRecebimentoInfo(usuario, msg);
                 tratarMensagem(msg);
             }
@@ -80,8 +78,8 @@ public class UsuarioListener extends Thread implements Serializable {
      * @param msg
      * @throws IOException
      */
-    private void tratarMensagem(Mensagem msg) throws IOException {
-        switch (msg.getAcao()) {
+    private void tratarMensagem(String msg) throws IOException {
+        switch (msg) {
         }
     }
 
@@ -92,7 +90,7 @@ public class UsuarioListener extends Thread implements Serializable {
      * @throws IOException
      */
     private void enviarInformacoesDeUsuario() throws IOException {
-        Mensagem msg = new Mensagem(Acao.LISTAGEM_GERENCIADORES);
+        String msg = "OBTER_REQUISICAO";
         UtilGeral.printarEnvioInfo(usuario, msg);
         this.usuario.getConexao().enviar(msg);
     }

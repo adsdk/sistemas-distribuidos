@@ -1,7 +1,6 @@
 package servidores.pojo;
 
 import comunicacao.ControladorConexao;
-import comunicacao.mensagens.Mensagem;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,7 +10,7 @@ import java.util.Objects;
  */
 public class Usuario implements Serializable {
 
-    private final ControladorConexao<Mensagem> conexao;
+    private final ControladorConexao<String> conexao;
     private String nomeUsuario;
 
     public Usuario(String nome, ControladorConexao conexao) {
@@ -27,7 +26,7 @@ public class Usuario implements Serializable {
         this.nomeUsuario = nomeUsuario;
     }
 
-    public ControladorConexao<Mensagem> getConexao() {
+    public ControladorConexao<String> getConexao() {
         return conexao;
     }
 

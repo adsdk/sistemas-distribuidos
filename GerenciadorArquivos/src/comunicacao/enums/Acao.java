@@ -8,6 +8,8 @@ import java.io.Serializable;
  */
 public enum Acao implements Serializable{
 
-    LISTAGEM_GERENCIADORES
+    LISTAGEM_GERENCIADORES,
+    OBTER_REQUISICAO,
+    REQUISITAR;
     
 }

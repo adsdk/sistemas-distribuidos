@@ -1,6 +1,5 @@
 package utilitarios;
 
-import comunicacao.mensagens.Mensagem;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -61,11 +60,11 @@ public class UtilGeral {
         return randomNumber;
     }
     
-    public static void printarEnvioInfo(Usuario usuario, Mensagem msg) {
+    public static void printarEnvioInfo(Usuario usuario, String msg) {
         System.out.println("Servidor enviando(#" + usuario.getNomeUsuario() + "): " + msg);
     }
 
-    public static void printarRecebimentoInfo(Usuario usuario, Mensagem msg) {
+    public static void printarRecebimentoInfo(Usuario usuario, String msg) {
         System.out.println("Servidor recebeu(#" + usuario.getNomeUsuario() + "): " + msg);
     }
 }
