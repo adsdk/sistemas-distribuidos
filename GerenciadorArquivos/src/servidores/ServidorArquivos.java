@@ -102,4 +102,9 @@ public class ServidorArquivos implements Comparable<ServidorArquivos> {
         return "GerenciadorArquivos{" + "info=" + info + ", ativo=" + ativo + '}';
     }
 
+    public void removerArquivo(Arquivo arquivo) {
+        this.arquivos.remove(arquivo);
+        arquivo.deletar();
+    }
+
 }

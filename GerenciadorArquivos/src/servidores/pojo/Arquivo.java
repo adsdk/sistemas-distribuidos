@@ -27,6 +27,10 @@ public class Arquivo {
         //TODO: fazer o arquivo ser salvo em disco.
     }
 
+    public void deletar() {
+        //TODO: apagar o arquivo do disco
+    }
+
     public String getNome() {
         return nome;
     }

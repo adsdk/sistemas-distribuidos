@@ -86,9 +86,9 @@ public class UsuarioListener extends Thread implements Serializable {
             this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
         }
         Status result;
-        switch (msg[0]) {
+        switch (msg[0].toUpperCase()) {
             case "PUT":
-                if (msg.length < 3) {
+                if (msg.length != 3) {
                     this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
                     break;
                 }
@@ -96,12 +96,20 @@ public class UsuarioListener extends Thread implements Serializable {
                 this.usuario.getConexao().enviar(result.getDescStatus());
                 break;
             case "GET":
+                if (msg.length != 2) {
+                    this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                    break;
+                }
                 result = buscarArquivo(msg);
                 if (result != null) {
                     this.usuario.getConexao().enviar(result.getDescStatus());
                 }
                 break;
             case "DELETE":
+                if (msg.length != 2) {
+                    this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                    break;
+                }
                 result = deletarArquivo(msg);
                 this.usuario.getConexao().enviar(result.getDescStatus());
                 break;
@@ -146,7 +154,7 @@ public class UsuarioListener extends Thread implements Serializable {
             Arquivo arquivo = ServidorGerenciamento.buscarArquivo(msg[1]);
             if (arquivo != null) {
                 if (arquivo.isArquivoDisponivel()) {
-                    this.usuario.getConexao().enviar(Status.REQUISICAO_OK.toString() + ", conteido:" + arquivo.getConteudo());
+                    this.usuario.getConexao().enviar(Status.REQUISICAO_OK.toString() + ", conteudo: " + arquivo.getConteudo());
                     return null;
                 }
                 return Status.ARQUIVO_INDISPONIVEL;
@@ -156,9 +164,22 @@ public class UsuarioListener extends Thread implements Serializable {
         return Status.SERVIDOR_INDISPONIVEL;
     }
 
+    /**
+     * DELETE
+     *
+     * @param msg
+     * @return
+     */
     private Status deletarArquivo(String[] msg) {
         if (ServidorGerenciamento.existeServidorDeArquivosAtivo()) {
-
+            Arquivo arquivo = ServidorGerenciamento.buscarArquivo(msg[1]);
+            if (arquivo != null) {
+                if (arquivo.isArquivoDisponivel()) {
+                    return ServidorGerenciamento.removerArquivo(arquivo);
+                }
+                return Status.ARQUIVO_INDISPONIVEL;
+            }
+            return Status.ARQUIVO_INEXISTENTE;
         }
         return Status.SERVIDOR_INDISPONIVEL;
     }

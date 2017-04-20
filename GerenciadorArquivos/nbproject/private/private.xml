@@ -10,13 +10,14 @@
             <file>file:/C:/Dev/Ulbra/SistemasDistribuidos/GerenciadorArquivos/src/servidores/GerenciadorArquivos.java</file>
             <file>file:/C:/Dev/Ulbra/SistemasDistribuidos/GerenciadorArquivos/src/comunicacao/ControladorConexao.java</file>
         </group>
-        <group name="github">
-            <file>file:/C:/alencar/RedesComputadoresI/GerenciadorArquivos/src/servidores/GerenciadorArquivos.java</file>
-            <file>file:/C:/alencar/RedesComputadoresI/GerenciadorArquivos/src/utilitarios/UtilGeral.java</file>
-            <file>file:/C:/alencar/RedesComputadoresI/GerenciadorArquivos/src/servidores/GerenciadorSecundario.java</file>
-            <file>file:/C:/alencar/RedesComputadoresI/GerenciadorArquivos/src/servidores/Inconstantes.java</file>
-            <file>file:/C:/alencar/RedesComputadoresI/GerenciadorArquivos/src/servidores/GerenciadorPrincipal.java</file>
-        </group>
         <group/>
+        <group name="github">
+            <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/ServidorGerenciamento.java</file>
+            <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/pojo/Usuario.java</file>
+            <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/comunicacao/enums/Status.java</file>
+            <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/pojo/Arquivo.java</file>
+            <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/UsuarioListener.java</file>
+            <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/ServidorArquivos.java</file>
+        </group>
     </open-files>
 </project-private>

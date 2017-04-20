@@ -27,6 +27,10 @@ public class ServidorGerenciamento extends Thread {
     //lista estática pois pode ser acessada por qualquer servidor de gerenciamento
     private static final List<ServidorArquivos> SERVIDORES_ARQUIVO = new ArrayList<>();
 
+    private static void balancearServidoresDeArquivo() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private final List<UsuarioListener> USUARIOS = new ArrayList<>();
 
     private Long idGerenciador;
@@ -146,7 +150,7 @@ public class ServidorGerenciamento extends Thread {
         return arquivo;
     }
 
-    public synchronized static Status adicionarNovoArquivo(String nome, String conteudo) {
+    public static synchronized Status adicionarNovoArquivo(String nome, String conteudo) {
         Arquivo arquivo = buscarArquivo(nome);
         if (arquivo == null) {
             if (existeServidorDeArquivosAtivo()) {
@@ -158,6 +162,14 @@ public class ServidorGerenciamento extends Thread {
             }
         }
         return Status.ARQUIVO_JA_EXISTE;
+    }
+
+    public static synchronized Status removerArquivo(Arquivo arquivo) {
+        ServidorArquivos serverDoArquivo = arquivo.getLocalArmazenado();
+        serverDoArquivo.removerArquivo(arquivo);
+        Collections.sort(SERVIDORES_ARQUIVO);
+        balancearServidoresDeArquivo();
+        return Status.REQUISICAO_OK;
     }
 
     public static boolean existeServidorDeArquivosAtivo() {
