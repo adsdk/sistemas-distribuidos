@@ -80,10 +80,16 @@ public class ServidorArquivos implements Comparable<ServidorArquivos> {
     }
 
     public void inativar() {
+        arquivos.stream().forEach((arquivo) -> {
+            arquivo.setArquivoDisponivel(false);
+        });
         ativo = false;
     }
 
     public void ativar() {
+        arquivos.stream().forEach((arquivo) -> {
+            arquivo.setArquivoDisponivel(true);
+        });
         ativo = true;
     }
 
