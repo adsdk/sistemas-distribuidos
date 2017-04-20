@@ -134,7 +134,7 @@ public class ServidorPrincipal implements Serializable {
         sb.append("***** MENU SERVIDOR DE GERENCIAMENTO *****\n")
                 .append("1 - Iniciar novo servidor\n")
                 .append("2 - Listar ativos\n")
-                //.append("3 - Parar servidor\n")
+                //                .append("3 - Parar servidor\n")
                 .append("0 - Voltar");
         System.out.println(sb);
         System.out.print("Opção: ");
@@ -146,7 +146,7 @@ public class ServidorPrincipal implements Serializable {
         sb.append("***** MENU SERVIDOR DE ARQUIVOS *****\n")
                 .append("1 - Iniciar novo servidor\n")
                 .append("2 - Listar ativos\n")
-                //.append("3 - Parar servidor\n")
+                .append("3 - Ativar/Inativar servidor\n")
                 .append("0 - Voltar");
         System.out.println(sb);
         System.out.print("Opção: ");
@@ -188,7 +188,7 @@ public class ServidorPrincipal implements Serializable {
                     SERVIDORES_GERENCIADORES.add(novoServidor);
                     iniciarServidor(novoServidor);
                     System.out.println("Servidor de gerenciamento criado com sucesso!");
-                    System.out.println("\n" + novoServidor.getInfo());
+                    System.out.println(novoServidor.getInfo());
                 }
                 break;
             case "2":
@@ -202,7 +202,7 @@ public class ServidorPrincipal implements Serializable {
         }
         UtilGeral.pausar();
     }
-
+    
     private static void executarAcaoServidorArquivos(String op) throws IOException {
         switch (op) {
             case "0":
@@ -218,6 +218,22 @@ public class ServidorPrincipal implements Serializable {
                 printarGerenciadoresDeArquivosAtivos();
                 break;
             case "3":
+                if (SERVIDORES_GERENCIADORES.isEmpty()) {
+                    System.out.println("Nenhum servidor de gerenciamento está ativo. Inicie um para poder continuar...");
+                } else {
+                    System.out.println("Informe o nome do servidor que deseja manipular: ");
+                    String nome = KEYBOARD_INPUT.readLine();
+                    System.out.println("\nEscolha a opção desejada (A)tivar, (I)nativar: ");
+                    String opc = KEYBOARD_INPUT.readLine();
+
+                    if ("A".equalsIgnoreCase(opc)) {
+                        ServidorGerenciamento.ativarGerenciadorDeArquivo(nome);
+                    } else if ("I".equalsIgnoreCase(opc)) {
+                        ServidorGerenciamento.inativarGerenciadorDeArquivo(nome);
+                    } else {
+                        System.out.println("Opção Inválida!");
+                    }
+                }
                 break;
             default:
                 System.out.println("Opção Inválida!");
@@ -241,8 +257,18 @@ public class ServidorPrincipal implements Serializable {
     private static ServidorGerenciamento criarNovoServidorGerenciador() throws IOException {
         UtilGeral.limparCMD();
         System.out.println("***** INICIAR NOVO SERVIDOR GERENCIADOR *****\n");
-        System.out.print("Nome/Apelido do servidor gerenciador: ");
-        String nome = KEYBOARD_INPUT.readLine();
+
+        String nome;
+        while (true) {
+            System.out.print("Nome/Apelido do servidor gerenciador: ");
+            nome = KEYBOARD_INPUT.readLine();
+
+            if (nome != null && nome.length() > 0) {
+                break;
+            }
+            System.out.println("Favor informar um nome!");
+        }
+
         final ServidorGerenciamento gs = new ServidorGerenciamento(Contadores.getIdGerenciadorGerenciamento(), nome, Contadores.getProximaPorta());
 //        System.out.println("Servidor iniciado com sucesso!");
         return gs;
@@ -264,8 +290,18 @@ public class ServidorPrincipal implements Serializable {
     private static ServidorArquivos criarNovoGerenciadorDeArquivos() throws IOException {
         UtilGeral.limparCMD();
         System.out.println("***** INICIAR NOVO SERVIDOR DE ARQUIVOS *****\n");
-        System.out.print("Nome/Apelido do servidor de arquivos: ");
-        String nome = KEYBOARD_INPUT.readLine();
+
+        String nome;
+        while (true) {
+            System.out.print("Nome/Apelido do servidor de arquivos: ");
+            nome = KEYBOARD_INPUT.readLine();
+
+            if (nome != null && nome.length() > 0) {
+                break;
+            }
+            System.out.println("Favor informar um nome!");
+        }
+
         ServidorArquivos ga = new ServidorArquivos(nome);
 //        System.out.println("\n" + ga.getInfo());
 //        System.out.println("Servidor de arquivos iniciado com sucesso!");

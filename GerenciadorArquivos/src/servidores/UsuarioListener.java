@@ -83,38 +83,38 @@ public class UsuarioListener extends Thread implements Serializable {
      */
     private void tratarMensagem(String[] msg) throws IOException {
         if (msg.length < 2) {
-            this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+            this.usuario.getConexao().enviar(UtilGeral.montarSaida(Status.REQUISICAO_NOK));
         }
         Status result;
         switch (msg[0].toUpperCase()) {
             case "PUT":
                 if (msg.length != 3) {
-                    this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                    this.usuario.getConexao().enviar(UtilGeral.montarSaida(Status.REQUISICAO_NOK));
                     break;
                 }
                 result = salvarArquivo(msg);
-                this.usuario.getConexao().enviar(result.getDescStatus());
+                this.usuario.getConexao().enviar(UtilGeral.montarSaida(result));
                 break;
             case "GET":
                 if (msg.length != 2) {
-                    this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                    this.usuario.getConexao().enviar(UtilGeral.montarSaida(Status.REQUISICAO_NOK));
                     break;
                 }
                 result = buscarArquivo(msg);
                 if (result != null) {
-                    this.usuario.getConexao().enviar(result.getDescStatus());
+                    this.usuario.getConexao().enviar(UtilGeral.montarSaida(result));
                 }
                 break;
             case "DELETE":
                 if (msg.length != 2) {
-                    this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                    this.usuario.getConexao().enviar(UtilGeral.montarSaida(Status.REQUISICAO_NOK));
                     break;
                 }
                 result = deletarArquivo(msg);
-                this.usuario.getConexao().enviar(result.getDescStatus());
+                this.usuario.getConexao().enviar(UtilGeral.montarSaida(result));
                 break;
             default:
-                this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                this.usuario.getConexao().enviar(UtilGeral.montarSaida(Status.REQUISICAO_NOK));
         }
     }
 
@@ -154,7 +154,7 @@ public class UsuarioListener extends Thread implements Serializable {
             Arquivo arquivo = ServidorGerenciamento.buscarArquivo(msg[1]);
             if (arquivo != null) {
                 if (arquivo.isArquivoDisponivel()) {
-                    this.usuario.getConexao().enviar(Status.REQUISICAO_OK.toString() + ", conteudo: " + arquivo.getConteudo());
+                    this.usuario.getConexao().enviar(UtilGeral.montarSaida(Status.REQUISICAO_OK, arquivo.getConteudo()));
                     return null;
                 }
                 return Status.ARQUIVO_INDISPONIVEL;

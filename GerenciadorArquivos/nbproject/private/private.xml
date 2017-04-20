@@ -10,7 +10,6 @@
             <file>file:/C:/Dev/Ulbra/SistemasDistribuidos/GerenciadorArquivos/src/servidores/GerenciadorArquivos.java</file>
             <file>file:/C:/Dev/Ulbra/SistemasDistribuidos/GerenciadorArquivos/src/comunicacao/ControladorConexao.java</file>
         </group>
-        <group/>
         <group name="github">
             <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/ServidorGerenciamento.java</file>
             <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/pojo/Usuario.java</file>
@@ -18,6 +17,10 @@
             <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/pojo/Arquivo.java</file>
             <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/UsuarioListener.java</file>
             <file>file:/C:/alencar/adrisson/sistemas-distribuidos/GerenciadorArquivos/src/servidores/ServidorArquivos.java</file>
+        </group>
+        <group>
+            <file>file:/C:/Dev/Ulbra/sistemas-distribuidos/GerenciadorArquivos/src/servidores/ServidorPrincipal.java</file>
+            <file>file:/C:/Dev/Ulbra/sistemas-distribuidos/GerenciadorArquivos/src/cliente/Cliente.java</file>
         </group>
     </open-files>
 </project-private>

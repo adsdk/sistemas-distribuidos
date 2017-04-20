@@ -1,5 +1,6 @@
 package utilitarios;
 
+import comunicacao.enums.Status;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,5 +67,23 @@ public class UtilGeral {
 
     public static void printarRecebimentoInfo(Usuario usuario, String msg) {
         System.out.println("Servidor recebeu(#" + usuario.getNomeUsuario() + "): " + msg);
+    }
+    
+    public static String montarSaida(Status status) {
+        return montarSaida(status, null);
+    }
+    
+    public static String montarSaida(Status status, String conteudo) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{")
+        .append("\"codRetorno\": ").append(status.getCodStatus()).append(", ")
+        .append("\"descricaoRetorno\": \"").append(status.getDescStatus()).append("\"");
+        
+        if (conteudo != null) {
+            sb.append(", ").append("\"conteudo\": \"").append(conteudo).append("\"");
+        }
+        
+        sb.append("}");
+        return sb.toString();
     }
 }

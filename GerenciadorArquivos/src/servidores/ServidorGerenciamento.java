@@ -27,6 +27,7 @@ public class ServidorGerenciamento extends Thread {
     //lista estática pois pode ser acessada por qualquer servidor de gerenciamento
     private static final List<ServidorArquivos> SERVIDORES_ARQUIVO = new ArrayList<>();
 
+    //TODO: criar  método que faça o balanceamento quando for iniciado um novo servidor de arquivo
     private static void balancearServidoresDeArquivo() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -101,7 +102,7 @@ public class ServidorGerenciamento extends Thread {
             return false;
         }
         final ServidorGerenciamento other = (ServidorGerenciamento) obj;
-        return Objects.equals(this.idGerenciador, other.idGerenciador);
+        return Objects.equals(this.info.getNome(), other.info.getNome());
     }
 
     @Override
@@ -129,14 +130,20 @@ public class ServidorGerenciamento extends Thread {
         int pos = SERVIDORES_ARQUIVO.indexOf(new ServidorArquivos(nome));
         if (pos != -1) {
             SERVIDORES_ARQUIVO.get(pos).inativar();
+            System.out.println("Servidor inativado com sucesso!");
+            return;
         }
+        System.out.println("Servidor não encontrado!");
     }
 
     public static synchronized void ativarGerenciadorDeArquivo(String nome) throws UnknownHostException {
         int pos = SERVIDORES_ARQUIVO.indexOf(new ServidorArquivos(nome));
         if (pos != -1) {
             SERVIDORES_ARQUIVO.get(pos).ativar();
+            System.out.println("Servidor ativado com sucesso!");
+            return;
         }
+        System.out.println("Servidor não encontrado!");
     }
 
     public static Arquivo buscarArquivo(String nomeArquivo) {
@@ -168,7 +175,6 @@ public class ServidorGerenciamento extends Thread {
         ServidorArquivos serverDoArquivo = arquivo.getLocalArmazenado();
         serverDoArquivo.removerArquivo(arquivo);
         Collections.sort(SERVIDORES_ARQUIVO);
-        balancearServidoresDeArquivo();
         return Status.REQUISICAO_OK;
     }
 
