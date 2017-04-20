@@ -6,7 +6,7 @@ package servidores.enums;
  */
 public enum TipoArquivo {
 
-    DIRETORIO,
+//    DIRETORIO,
     DOCUMENTO
     
 }

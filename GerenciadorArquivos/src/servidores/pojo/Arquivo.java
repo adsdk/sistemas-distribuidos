@@ -11,12 +11,18 @@ import servidores.enums.TipoArquivo;
 public class Arquivo {
 
     private final String nome;
+    private final String conteudo;
     private final TipoArquivo tipo;
     private ServidorArquivos localArmazenado;
 
-    public Arquivo(String nome, TipoArquivo tipoArquivo) {
+    public Arquivo(String nome, TipoArquivo tipoArquivo, String contudo) {
         this.nome = nome;
         this.tipo = tipoArquivo;
+        this.conteudo = contudo;
+    }
+
+    public void salvar() {
+        //TODO: fazer o arquivo ser salvo em disco.
     }
 
     public String getNome() {

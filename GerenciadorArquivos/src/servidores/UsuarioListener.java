@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import servidores.pojo.Arquivo;
 import servidores.pojo.Usuario;
 import utilitarios.UtilGeral;
 
@@ -84,19 +85,22 @@ public class UsuarioListener extends Thread implements Serializable {
         if (msg.length < 2) {
             this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
         }
-
+        Status result;
         switch (msg[0]) {
             case "PUT":
                 if (msg.length < 3) {
                     this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
                 }
-                this.usuario.getConexao().enviar(Status.REQUISICAO_OK.getDescStatus());
+                result = salvarArquivo(msg);
+                this.usuario.getConexao().enviar(result.getDescStatus());
                 break;
             case "GET":
-                this.usuario.getConexao().enviar(Status.ARQUIVO_INEXISTENTE.getDescStatus());
+                result = buscarArquivo(msg);
+                this.usuario.getConexao().enviar(result.getDescStatus());
                 break;
             case "DELETE":
-                this.usuario.getConexao().enviar(Status.ARQUIVO_INDISPONIVEL.getDescStatus());
+                result = deletarArquivo(msg);
+                this.usuario.getConexao().enviar(result.getDescStatus());
                 break;
             default:
                 this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
@@ -113,6 +117,33 @@ public class UsuarioListener extends Thread implements Serializable {
         String msg = Acao.OBTER_REQUISICAO.toString();
         UtilGeral.printarEnvioInfo(usuario, msg);
         this.usuario.getConexao().enviar(msg);
+    }
+
+    /**
+     * PUT <nome_arquivo> <conteudo>
+     *
+     * @param msg
+     * @return
+     */
+    private Status salvarArquivo(String[] msg) {
+        if (ServidorGerenciamento.existeServidorDeArquivosAtivo()) {
+            return ServidorGerenciamento.adicionarNovoArquivo(msg[1], msg[2]);
+        }
+        return Status.SERVIDOR_INDISPONIVEL;
+    }
+
+    private Status buscarArquivo(String[] msg) {
+        if (ServidorGerenciamento.existeServidorDeArquivosAtivo()) {
+            
+        }
+        return Status.SERVIDOR_INDISPONIVEL;
+    }
+
+    private Status deletarArquivo(String[] msg) {
+        if (ServidorGerenciamento.existeServidorDeArquivosAtivo()) {
+
+        }
+        return Status.SERVIDOR_INDISPONIVEL;
     }
 
 }

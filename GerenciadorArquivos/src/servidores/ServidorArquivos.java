@@ -1,5 +1,6 @@
 package servidores;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -22,15 +23,23 @@ public class ServidorArquivos implements Comparable<ServidorArquivos> {
     public ServidorArquivos(String nome) throws UnknownHostException {
         arquivos = new ArrayList<>();
         info = new GerenciadorInfo(nome, InetAddress.getLocalHost().getHostAddress(), -1);
+        //Cria o diretório deste servidor de arquivos
+        new File(nome).mkdirs();
         this.ativo = true;
     }
 
     public Arquivo buscarArquivo(String nome) {
-        int pos = arquivos.indexOf(new Arquivo(nome, TipoArquivo.DOCUMENTO));
+        int pos = arquivos.indexOf(new Arquivo(nome, TipoArquivo.DOCUMENTO, null));
         if (pos != -1) {
             return arquivos.get(pos);
         }
         return null;
+    }
+
+    public synchronized void adicionarArquivo(Arquivo arquivo) {
+        this.arquivos.add(arquivo);
+        arquivo.setLocalArmazenado(this);
+        arquivo.salvar();
     }
 
     @Override

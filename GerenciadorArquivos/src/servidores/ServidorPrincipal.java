@@ -38,7 +38,7 @@ public class ServidorPrincipal implements Serializable {
         escutar.start();
 
         menuServidorPrincipal();
-        
+
         serverSocket.close();
     }
 
@@ -181,7 +181,15 @@ public class ServidorPrincipal implements Serializable {
             case "0":
                 return;
             case "1":
-                SERVIDORES_GERENCIADORES.add(criarNovoServidorGerenciador());
+                final ServidorGerenciamento novoServidor = criarNovoServidorGerenciador();
+                if (SERVIDORES_GERENCIADORES.contains(novoServidor)) {
+                    System.out.println("Já existe um servidor de gerenciamento com o nome '" + novoServidor.getInfo().getNome() + "'");
+                } else {
+                    SERVIDORES_GERENCIADORES.add(novoServidor);
+                    iniciarServidor(novoServidor);
+                    System.out.println("Servidor de gerenciamento criado com sucesso!");
+                    System.out.println("\n" + novoServidor.getInfo());
+                }
                 break;
             case "2":
                 printarServidoresGerenciadoresAtivos();
@@ -235,9 +243,8 @@ public class ServidorPrincipal implements Serializable {
         System.out.println("***** INICIAR NOVO SERVIDOR GERENCIADOR *****\n");
         System.out.print("Nome/Apelido do servidor gerenciador: ");
         String nome = KEYBOARD_INPUT.readLine();
-        ServidorGerenciamento gs = new ServidorGerenciamento(Contadores.getIdGerenciadorGerenciamento(), nome, Contadores.getProximaPorta());
-        System.out.println("\n" + gs.getInfo());
-        System.out.println("Servidor iniciado com sucesso!");
+        final ServidorGerenciamento gs = new ServidorGerenciamento(Contadores.getIdGerenciadorGerenciamento(), nome, Contadores.getProximaPorta());
+//        System.out.println("Servidor iniciado com sucesso!");
         return gs;
     }
 
@@ -260,8 +267,8 @@ public class ServidorPrincipal implements Serializable {
         System.out.print("Nome/Apelido do servidor de arquivos: ");
         String nome = KEYBOARD_INPUT.readLine();
         ServidorArquivos ga = new ServidorArquivos(nome);
-        System.out.println("\n" + ga.getInfo());
-        System.out.println("Servidor de arquivos iniciado com sucesso!");
+//        System.out.println("\n" + ga.getInfo());
+//        System.out.println("Servidor de arquivos iniciado com sucesso!");
         return ga;
     }
 
@@ -272,5 +279,16 @@ public class ServidorPrincipal implements Serializable {
         System.out.println("\n");
     }
     // </editor-fold>
+
+    private static void iniciarServidor(final ServidorGerenciamento novoServidor) {
+        Thread startServer = new Thread(() -> {
+            try {
+                novoServidor.iniciarServidor();
+            } catch (IOException ex) {
+                Logger.getLogger(ServidorGerenciamento.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        startServer.start();
+    }
 
 }

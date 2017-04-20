@@ -1,6 +1,7 @@
 package servidores;
 
 import comunicacao.ControladorConexao;
+import comunicacao.enums.Status;
 import comunicacao.mensagens.Mensagem;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import servidores.enums.TipoArquivo;
 import servidores.info.GerenciadorInfo;
+import servidores.pojo.Arquivo;
 import servidores.pojo.Usuario;
 import utilitarios.UtilGeral;
 
@@ -24,8 +25,8 @@ import utilitarios.UtilGeral;
 public class ServidorGerenciamento extends Thread {
 
     //lista estática pois pode ser acessada por qualquer servidor de gerenciamento
-    private static final List<ServidorArquivos> GERENCIADORES_ARQUIVOS = new ArrayList<>();
-    
+    private static final List<ServidorArquivos> SERVIDORES_ARQUIVO = new ArrayList<>();
+
     private final List<UsuarioListener> USUARIOS = new ArrayList<>();
 
     private Long idGerenciador;
@@ -37,16 +38,6 @@ public class ServidorGerenciamento extends Thread {
         this.idGerenciador = idGerenciador;
         this.serverSocket = new ServerSocket(port);
         this.info = new GerenciadorInfo(nome, InetAddress.getLocalHost().getHostAddress(), port);
-        
-        Thread startServer = new Thread(() -> {
-            try {
-                this.iniciarServidor();
-            } catch (IOException ex) {
-                Logger.getLogger(ServidorGerenciamento.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        startServer.start();
     }
 
     public ServidorGerenciamento(int port) {
@@ -70,25 +61,24 @@ public class ServidorGerenciamento extends Thread {
         }
     }
 
-    public static synchronized void addGerenciadorArquivos(ServidorArquivos gerenciadorArquivos) {
+    public static synchronized void addGerenciadorArquivos(ServidorArquivos servidorArquivo) {
         //TODO: verificar se o gerenciador de arquivos com o mesmo nome já existe,
         //por causa que cada gerenciador de arquivos cria uma pasta com seu nome;
-        GERENCIADORES_ARQUIVOS.add(gerenciadorArquivos);
-        Collections.sort(GERENCIADORES_ARQUIVOS);
-    }
-
-    public static synchronized void inativarGerenciadorDeArquivo(String nome) throws UnknownHostException {
-        int pos = GERENCIADORES_ARQUIVOS.indexOf(new ServidorArquivos(nome));
-        if (pos != -1) {
-            GERENCIADORES_ARQUIVOS.get(pos).inativar();
+        if (!SERVIDORES_ARQUIVO.contains(servidorArquivo)) {
+            SERVIDORES_ARQUIVO.add(servidorArquivo);
+            System.out.println("Servidor de arquivo criado com sucesso!");
+            System.out.println(servidorArquivo);
+            Collections.sort(SERVIDORES_ARQUIVO);
+        } else {
+            System.out.println("Servidor de arquivo com o nome '" + servidorArquivo.getInfo().getNome() + "' já existe!");
         }
     }
 
     public static void mostrarGerenciadoresDeArquivoAtivos() {
-        if (GERENCIADORES_ARQUIVOS.isEmpty()) {
+        if (SERVIDORES_ARQUIVO.isEmpty()) {
             System.out.println("\nNENHUM SERVIDOR DE ARQUIVOS ATIVO! ");
         } else {
-            GERENCIADORES_ARQUIVOS.stream()
+            SERVIDORES_ARQUIVO.stream()
                     .filter(x -> x.isAtivo())
                     .collect(Collectors.toList())
                     .forEach(System.out::println);
@@ -130,4 +120,47 @@ public class ServidorGerenciamento extends Thread {
     public boolean isRodando() {
         return rodando;
     }
+
+    public static synchronized void inativarGerenciadorDeArquivo(String nome) throws UnknownHostException {
+        int pos = SERVIDORES_ARQUIVO.indexOf(new ServidorArquivos(nome));
+        if (pos != -1) {
+            SERVIDORES_ARQUIVO.get(pos).inativar();
+        }
+    }
+
+    public static synchronized void ativarGerenciadorDeArquivo(String nome) throws UnknownHostException {
+        int pos = SERVIDORES_ARQUIVO.indexOf(new ServidorArquivos(nome));
+        if (pos != -1) {
+            SERVIDORES_ARQUIVO.get(pos).ativar();
+        }
+    }
+
+    public static Arquivo buscarArquivo(String nomeArquivo) {
+        Arquivo arquivo = null;
+        for (ServidorArquivos servidorArquivos : SERVIDORES_ARQUIVO) {
+            servidorArquivos.buscarArquivo(nomeArquivo);
+            if (arquivo != null) {
+                return arquivo;
+            }
+        }
+        return arquivo;
+    }
+
+    public synchronized static Status adicionarNovoArquivo(String nome, String conteudo) {
+        Arquivo arquivo = buscarArquivo(nome);
+        if (arquivo == null) {
+            if (existeServidorDeArquivosAtivo()) {
+                SERVIDORES_ARQUIVO.get(0).adicionarArquivo(new Arquivo(nome, TipoArquivo.DOCUMENTO, conteudo));
+                Collections.sort(SERVIDORES_ARQUIVO);
+            } else {
+                return Status.SERVIDOR_INDISPONIVEL;
+            }
+        }
+        return Status.ARQUIVO_JA_EXISTE;
+    }
+
+    public static boolean existeServidorDeArquivosAtivo() {
+        return SERVIDORES_ARQUIVO.stream().anyMatch((servidorArquivos) -> (servidorArquivos.isAtivo()));
+    }
+
 }

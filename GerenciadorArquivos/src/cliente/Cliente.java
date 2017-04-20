@@ -88,7 +88,7 @@ public class Cliente {
             String retorno = controladorConexao.receber();
             System.out.println(retorno);
             
-            System.out.println("Deseja fazer outra requisição? (S/N)");
+            System.out.print("Deseja fazer outra requisição? (S/N)");
             String opc = KEYBOARD_INPUT.readLine();
             
             if (!"S".equalsIgnoreCase(opc)) {
