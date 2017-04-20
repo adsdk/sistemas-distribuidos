@@ -1,14 +1,13 @@
 package comunicacao.mensagens;
 
-import servidores.info.GerenciadorInfo;
 import comunicacao.enums.Acao;
 import java.io.Serializable;
 import java.util.List;
+import servidores.info.GerenciadorInfo;
 
 /**
  *
- * @created 11/04/2017
- * @author alencar.hentges (CWI Software)
+ * @author adrisson.silva
  */
 public class MensagemListaGerenciadores extends Mensagem implements Serializable {
 

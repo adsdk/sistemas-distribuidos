@@ -6,11 +6,11 @@ import comunicacao.mensagens.MensagemListaGerenciadores;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import servidores.info.GerenciadorInfo;
 
 /**
  *
- * @created 11/04/2017
- * @author alencar.hentges (CWI Software)
+ * @author adrisson.silva
  */
 public class Cliente {
 
@@ -31,7 +31,7 @@ public class Cliente {
 
     }
 
-    private static void conectarViaPrincipal(MensagemListaGerenciadores msgLista) throws IOException {
+    private static void conectarViaPrincipal(MensagemListaGerenciadores msgLista) throws IOException, ClassNotFoundException {
         if (!msgLista.getGerenciadoresInfo().isEmpty()) {
             System.out.println("\nLISTA DE SERVIDORES DE GERENCIAMENTO ATIVOS: ");
 
@@ -41,8 +41,13 @@ public class Cliente {
 
             System.out.print("\nInforme o nome do servidor de gerenciamento que você deseja conectar-se: ");
             String nome = KEYBOARD_INPUT.readLine();
-
-            System.out.println("\nCONECTADO AO SERVIDOR DE GERENCIAMENTO " + nome + "! ");
+            
+            for (GerenciadorInfo gerenciadorInfo : msgLista.getGerenciadoresInfo()) {
+                if (gerenciadorInfo.getNome().equalsIgnoreCase(nome)) {
+                    estabelecerConexaoComServidor(gerenciadorInfo.getIP(), gerenciadorInfo.getPort());
+                    break;
+                }
+            }
         } else {
             System.out.println("\nNENHUM SERVIDOR DE GERENCIAMENTO ATIVO! ");
         }
@@ -61,14 +66,24 @@ public class Cliente {
         }
     }
 
-    private static void conectarDiretamente() throws IOException {
+    private static void conectarDiretamente() throws IOException, ClassNotFoundException {
         System.out.print("\nInforme o ip do servidor de gerenciamento que você deseja conectar-se: ");
         String ip = KEYBOARD_INPUT.readLine();
 
         System.out.print("\nInforme a porta do servidor de gerenciamento que você deseja conectar-se: ");
         String port = KEYBOARD_INPUT.readLine();
 
-        System.out.println("\nCONECTADO AO SERVIDOR DE GERENCIAMENTO! (" + ip + ":" + port + ") ");
+        estabelecerConexaoComServidor(ip, Integer.valueOf(port));
     }
 
+    private static void estabelecerConexaoComServidor(String ip, int port) throws IOException, ClassNotFoundException {
+        System.out.println("Estabelecendo conexão com o servidor...");
+        controladorConexao = new ControladorConexao(ip, port);
+        System.out.println("Conexão estabelecida com sucesso!");
+        
+        while (controladorConexao.isConectionOpen()) {
+            Mensagem msg = controladorConexao.receber();
+            System.out.println(msg.getAcao());
+        }
+    }
 }

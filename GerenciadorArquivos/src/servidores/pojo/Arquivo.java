@@ -1,19 +1,18 @@
 package servidores.pojo;
 
 import java.util.Objects;
-import servidores.GerenciadorArquivos;
+import servidores.ServidorArquivos;
 import servidores.enums.TipoArquivo;
 
 /**
  *
- * @created 11/04/2017
- * @author alencar.hentges (CWI Software)
+ * @author adrisson.silva
  */
 public class Arquivo {
 
     private final String nome;
     private final TipoArquivo tipo;
-    private GerenciadorArquivos localArmazenado;
+    private ServidorArquivos localArmazenado;
 
     public Arquivo(String nome, TipoArquivo tipoArquivo) {
         this.nome = nome;
@@ -24,11 +23,11 @@ public class Arquivo {
         return nome;
     }
 
-    public GerenciadorArquivos getLocalArmazenado() {
+    public ServidorArquivos getLocalArmazenado() {
         return localArmazenado;
     }
 
-    public void setLocalArmazenado(GerenciadorArquivos localArmazenado) {
+    public void setLocalArmazenado(ServidorArquivos localArmazenado) {
         this.localArmazenado = localArmazenado;
     }
 

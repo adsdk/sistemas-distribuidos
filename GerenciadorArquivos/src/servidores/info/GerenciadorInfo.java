@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 /**
  *
- * @created 11/04/2017
- * @author alencar.hentges (CWI Software)
+ * @author adrisson.silva
  */
 public class GerenciadorInfo implements Serializable {
 

@@ -2,8 +2,7 @@ package servidores.enums;
 
 /**
  *
- * @created 11/04/2017
- * @author alencar.hentges (CWI Software)
+ * @author adrisson.silva
  */
 public enum TipoArquivo {
 

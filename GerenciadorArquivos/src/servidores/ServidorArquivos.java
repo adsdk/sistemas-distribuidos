@@ -11,16 +11,15 @@ import servidores.pojo.Arquivo;
 
 /**
  *
- * @created 11/04/2017
- * @author alencar.hentges (CWI Software)
+ * @author adrisson.silva
  */
-public class GerenciadorArquivos implements Comparable<GerenciadorArquivos> {
+public class ServidorArquivos implements Comparable<ServidorArquivos> {
 
     private final GerenciadorInfo info;
     private final List<Arquivo> arquivos;
     private boolean ativo;
 
-    public GerenciadorArquivos(String nome) throws UnknownHostException {
+    public ServidorArquivos(String nome) throws UnknownHostException {
         arquivos = new ArrayList<>();
         info = new GerenciadorInfo(nome, InetAddress.getLocalHost().getHostAddress(), -1);
         this.ativo = true;
@@ -35,7 +34,7 @@ public class GerenciadorArquivos implements Comparable<GerenciadorArquivos> {
     }
 
     @Override
-    public int compareTo(GerenciadorArquivos o) {
+    public int compareTo(ServidorArquivos o) {
         if (ativo) {
             return new Integer(arquivos.size()).compareTo(o.arquivos.size());
         }
@@ -67,7 +66,7 @@ public class GerenciadorArquivos implements Comparable<GerenciadorArquivos> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final GerenciadorArquivos other = (GerenciadorArquivos) obj;
+        final ServidorArquivos other = (ServidorArquivos) obj;
         return Objects.equals(this.info.getNome(), other.info.getNome());
     }
 
