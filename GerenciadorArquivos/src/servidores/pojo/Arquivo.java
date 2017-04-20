@@ -14,11 +14,13 @@ public class Arquivo {
     private final String conteudo;
     private final TipoArquivo tipo;
     private ServidorArquivos localArmazenado;
+    private boolean arquivoDisponivel;
 
     public Arquivo(String nome, TipoArquivo tipoArquivo, String contudo) {
         this.nome = nome;
         this.tipo = tipoArquivo;
         this.conteudo = contudo;
+        this.arquivoDisponivel = true;
     }
 
     public void salvar() {
@@ -39,6 +41,18 @@ public class Arquivo {
 
     public TipoArquivo getTipo() {
         return tipo;
+    }
+
+    public String getConteudo() {
+        return conteudo;
+    }
+
+    public boolean isArquivoDisponivel() {
+        return arquivoDisponivel;
+    }
+
+    public void setArquivoDisponivel(boolean arquivoDisponivel) {
+        this.arquivoDisponivel = arquivoDisponivel;
     }
 
     @Override
