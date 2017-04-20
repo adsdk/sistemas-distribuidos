@@ -1,6 +1,7 @@
 package cliente;
 
 import comunicacao.ControladorConexao;
+import comunicacao.enums.Acao;
 import comunicacao.mensagens.MensagemListaGerenciadores;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,15 +81,25 @@ public class Cliente {
         controladorConexao = new ControladorConexao(ip, port);
         System.out.println("Conexão estabelecida com sucesso!");
 
+        String msg = controladorConexao.receber();
         while (controladorConexao.isConectionOpen()) {
-            String msg = controladorConexao.receber();
             tratarMensagem(msg);
+            
+            String retorno = controladorConexao.receber();
+            System.out.println(retorno);
+            
+            System.out.println("Deseja fazer outra requisição? (S/N)");
+            String opc = KEYBOARD_INPUT.readLine();
+            
+            if (!"S".equalsIgnoreCase(opc)) {
+                controladorConexao.close();
+            }
         }
     }
 
     private static void tratarMensagem(String msg) throws IOException {
-        switch (msg) {
-            case "OBTER_REQUISICAO":
+        switch (Acao.valueOf(msg)) {
+            case OBTER_REQUISICAO:
                 System.out.print("\nInforme a sua requisição: ");
                 String requisicao = KEYBOARD_INPUT.readLine();
                 controladorConexao.enviar(requisicao);

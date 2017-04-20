@@ -1,5 +1,7 @@
 package servidores;
 
+import comunicacao.enums.Acao;
+import comunicacao.enums.Status;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
@@ -31,7 +33,8 @@ public class UsuarioListener extends Thread implements Serializable {
             while (this.usuario.getConexao().isConectionOpen()) {
                 String msg = this.usuario.getConexao().receber();
                 UtilGeral.printarRecebimentoInfo(usuario, msg);
-                tratarMensagem(msg);
+                String[] request = msg.split(" ");
+                tratarMensagem(request);
             }
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("faio");
@@ -71,15 +74,32 @@ public class UsuarioListener extends Thread implements Serializable {
         }
     }
 
-
     /**
      * Faz o tratamento da mensagem recebida
      *
      * @param msg
      * @throws IOException
      */
-    private void tratarMensagem(String msg) throws IOException {
-        switch (msg) {
+    private void tratarMensagem(String[] msg) throws IOException {
+        if (msg.length < 2) {
+            this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+        }
+
+        switch (msg[0]) {
+            case "PUT":
+                if (msg.length < 3) {
+                    this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
+                }
+                this.usuario.getConexao().enviar(Status.REQUISICAO_OK.getDescStatus());
+                break;
+            case "GET":
+                this.usuario.getConexao().enviar(Status.ARQUIVO_INEXISTENTE.getDescStatus());
+                break;
+            case "DELETE":
+                this.usuario.getConexao().enviar(Status.ARQUIVO_INDISPONIVEL.getDescStatus());
+                break;
+            default:
+                this.usuario.getConexao().enviar(Status.REQUISICAO_NOK.getDescStatus());
         }
     }
 
@@ -90,7 +110,7 @@ public class UsuarioListener extends Thread implements Serializable {
      * @throws IOException
      */
     private void enviarInformacoesDeUsuario() throws IOException {
-        String msg = "OBTER_REQUISICAO";
+        String msg = Acao.OBTER_REQUISICAO.toString();
         UtilGeral.printarEnvioInfo(usuario, msg);
         this.usuario.getConexao().enviar(msg);
     }
