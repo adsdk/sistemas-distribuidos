@@ -1,0 +1,8 @@
+{
+  "serverName" : "serverAdrisson",
+  "serverIP" : "192.168.0.29",
+  "portListen" : 6789,
+  "memcachedServer" : "localhost",
+  "memcachedPort" : 11211,
+  "yearData" : [2002]
+}

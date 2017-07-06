@@ -1,0 +1,11 @@
+//db.ontime.createIndex({"ArrDelay": -1})
+//db.ontime.createIndex({"DepDelay": -1})
+//db.ontime.createIndex({"Year": 1})
+//db.ontime.createIndex({"Month": 1})
+//db.ontime.createIndex({"DayofMonth": 1})
+
+//arrivalOnTimeFlights ok
+//arrivalDelayedFlights ok
+db.ontime.aggregate([{$group: {_id: null, arrivalOnTimeFlights: {$sum: {$cond: [{$lt: ['$ArrDelay', 1]}, 1, 0]}}, arrivalDelayedFlights: {$sum: {$cond: [{$gt: ['$ArrDelay', 0]}, 1, 0]}}, arrivalDelayedAverageTime: {$avg: '$ArrDelay'}, departureOnTimeFlights: {$sum: {$cond: [{$lt: ['$DepDelay', 1]}, 1, 0]}}, departureDelayedFlights: {$sum: {$cond: [{$gt: ['$DepDelay', 0]}, 1, 0]}}, departureDelayedAverageTime: {$avg: '$DepDelay'} }}]);
+
+db.ontime.aggregate([{$match: { $and: [ {Year: 2002 }, {Month: 12}, {DayofMonth: 1}, {UniqueCarrier: "US"}, {Origin: "PIT"} ] } }, {$group: {_id: null, arrivalOnTimeFlights: {$sum: {$cond: [{$lt: ['$ArrDelay', 1]}, 1, 0]}}, arrivalDelayedFlights: {$sum: {$cond: [{$gt: ['$ArrDelay', 0]}, 1, 0]}}, arrivalDelayedAverageTime: {$avg: '$ArrDelay'}, departureOnTimeFlights: {$sum: {$cond: [{$lt: ['$DepDelay', 1]}, 1, 0]}}, departureDelayedFlights: {$sum: {$cond: [{$gt: ['$DepDelay', 0]}, 1, 0]}}, departureDelayedAverageTime: {$avg: '$DepDelay'} }}]);
