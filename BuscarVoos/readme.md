@@ -10,17 +10,18 @@ ex: <br/>
 #mongoimport -d sisdis -c airports --type csv --headerline --file airports.csv <br/>
 
 <h3>3)Acessar via terminal o shell do mongo. (comando mongo --shell)</h3> <br/>
+    <p>Inicialmente selecionar a database: comando "use sisdis"</p>
 <h4>Normalizar campos para uso facilitado de seus objetos no JAVA:</h4> <br/>
-    db.carriers.updateMany({}, {$rename:{"Code": "code"}}); <br/>
-    db.carriers.updateMany({}, {$rename:{"Description": "description"}}); <br/>
-    db.airports.updateMany({}, {$rename:{"long": "lng"}}); <br/>
-<h4>Criar índices para as collections:</h4> <br/>
-    db.ontime.createIndex({"ArrDelay": -1}) <br/>
-    db.ontime.createIndex({"DepDelay": -1}) <br/>
-    db.ontime.createIndex({"Year": 1}) <br/>
-    db.ontime.createIndex({"Month": 1}) <br/>
-    db.ontime.createIndex({"DayofMonth": 1}) <br/>
+    <p>db.carriers.updateMany({}, {$rename:{"Code": "code"}}); </p>
+    <p>db.carriers.updateMany({}, {$rename:{"Description": "description"}}); </p>
+    <p>db.airports.updateMany({}, {$rename:{"long": "lng"}}); </p>
+<h4>Criar índices para a collection ontime:</h4> <br/>
+    <p>db.ontime.createIndex({"ArrDelay": -1}); </p>
+    <p>db.ontime.createIndex({"DepDelay": -1}); </p>
+    <p>db.ontime.createIndex({"Year": 1}); </p>
+    <p>db.ontime.createIndex({"Month": 1}); </p>
+    <p>db.ontime.createIndex({"DayofMonth": 1}); </p>
 
-
+<br/><br/>
 COMANDOS ÚTEIS: <br/>
 iniciar mongodb: sudo service mongod start <br/>
