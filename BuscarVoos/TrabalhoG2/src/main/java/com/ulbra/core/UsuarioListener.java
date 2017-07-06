@@ -21,10 +21,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.XMemcachedClientBuilder;
+import net.rubyeye.xmemcached.exception.MemcachedException;
 import net.rubyeye.xmemcached.utils.AddrUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -271,7 +273,24 @@ public class UsuarioListener extends Thread implements Serializable {
                                 try {
                                     result = getDelayServerFromOtherServer(msgOriginal, location[0], location[1]);
                                 } catch (Exception ex) {
-                                    result = "{\"errorCode\": 3, \"errorDescription\": \"Falha no server do coleguinha\"}";
+                                    boolean inativar = false;
+                                    for (Server server : listServer.getServers()) {
+                                        if (server.getName().equals(serverWithData.getName())) {
+                                            server.setActive(false);
+                                            inativar = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    if (inativar) {
+                                        try {
+                                            clientMemcached.set("SD_ListServers", 0, gson.toJson(listServer));
+                                        } catch (Exception e) {
+                                            System.out.println(e);
+                                        }
+                                    }
+                                    
+                                    result = "{\"errorCode\": 1, \"errorDescription\": \"Servidor Indisponível\"}";
                                 }
                             } else {
                                 result = "{\"errorCode\": 1, \"errorDescription\": \"Servidor Indisponível\"}";
@@ -286,14 +305,6 @@ public class UsuarioListener extends Thread implements Serializable {
                 break;
             case "EXIT":
                 interrupt();
-            case "GETROLA":
-                try {
-                    msgOriginal = "GETDELAYDATA 2002";
-                    result = getDelayServerFromOtherServer(msgOriginal, "localhost", "6790");
-                } catch (Exception ex) {
-                    result = "faio";
-                }
-                this.usuario.getConexao().enviar(result);
                 break;
             default:
                 this.usuario.getConexao().enviar("{\"errorCode\": 404, \"errorDescription\": \"Requisicao nao encontrada\"}");
